@@ -34,7 +34,7 @@ class Rectangle extends Drawable {
 
     /**
      * Creates the modelview-matrix for this rectangle.
-     * @returns {mat3} movelview-matrix
+     * @returns {mat3} modelview-matrix
      */
     createModelViewMat() {
         let modelViewMat = mat3.create();
@@ -43,8 +43,8 @@ class Rectangle extends Drawable {
         return modelViewMat;
     }
 
-    draw(gl, aVertexPositionId, aVertexColorId, uModelMatId) {
+    draw(gl, aVertexPositionId, aVertexColorId, aVertexTextureCoordId, uModelMatId) {
         gl.uniformMatrix3fv(uModelMatId, false, this.createModelViewMat());
-        this.rectangleBuffer.draw(gl, aVertexPositionId, aVertexColorId);
+        this.rectangleBuffer.draw(gl, aVertexPositionId, aVertexColorId, aVertexTextureCoordId);
     }
 }

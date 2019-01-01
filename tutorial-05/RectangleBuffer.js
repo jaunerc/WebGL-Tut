@@ -34,6 +34,23 @@ function RectangleBuffer(gl) {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
         return buffer;
     }
+    
+    function defineTextureCoords(gl) {
+        let textureCoordinates = [
+            0.0,  1.0,
+            0.0,  0.0,
+            1.0,  0.0,
+
+            0.0,  1.0,
+            1.0,  1.0,
+            1.0,  0.0,
+        ];
+
+        let buffer = gl.createBuffer ();
+        gl.bindBuffer(gl.ARRAY_BUFFER , buffer);
+        gl.bufferData(gl.ARRAY_BUFFER , new  Float32Array(textureCoordinates), gl.STATIC_DRAW);
+        return buffer;
+    }
 
     function defineTriangles(gl) {
         let triangles = [
@@ -50,8 +67,9 @@ function RectangleBuffer(gl) {
     return {
         bufferVertices: defineVertices(gl),
         bufferColors: defineColors(gl),
+        bufferTexture: defineTextureCoords(gl),
         bufferTriangles: defineTriangles(gl),
-        draw: function (gl, aVertexPositionId, aVertexColorId) {
+        draw: function (gl, aVertexPositionId, aVertexColorId, aVertexTextureCoordId) {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferVertices);
             gl.vertexAttribPointer(aVertexPositionId, 2, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(aVertexPositionId);
@@ -59,6 +77,10 @@ function RectangleBuffer(gl) {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferColors);
             gl.vertexAttribPointer(aVertexColorId, 4, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(aVertexColorId);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferTexture);
+            gl.vertexAttribPointer(aVertexTextureCoordId, 2, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(aVertexTextureCoordId);
 
             let numTriangles = 2 * 3; // 2 vertices per triangle corner
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferTriangles);

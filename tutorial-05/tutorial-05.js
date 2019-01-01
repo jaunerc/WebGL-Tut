@@ -5,7 +5,7 @@ let context = {
 };
 
 let texture = {
-    imgSource: "lena512.png",
+    imgSource: "countryside512.jpg",
     object: null
 };
 
@@ -13,7 +13,8 @@ let scene = {
     clearColor: {r:0.4, g:0.823, b:1, a:1},
     numRectangles: 100,
     rectanglePosRange: {x: 250, y: 250},
-    rectangles: null
+    rectangleColor: null,
+    rectangleTexture: null
 };
 
 // Starts the program when the entire page loads
@@ -44,9 +45,12 @@ function start() {
 function prepareGlVariables() {
     context.aVertexPositionId = gl.getAttribLocation(context.shaderProgram, "aVertexPosition");
     context.aVertexColorId = gl.getAttribLocation(context.shaderProgram, "aVertexColor");
+    context.aVertexTextureCoordId = gl.getAttribLocation(context.shaderProgram, "aVertexTextureCoord");
 
     context.uProjectionMatId = gl.getUniformLocation(context.shaderProgram, "uProjectionMat");
     context.uModelMatId = gl.getUniformLocation(context.shaderProgram, "uModelMat");
+    context.uIsTextureDrawingId = gl.getUniformLocation(context.shaderProgram, "uIsTextureDrawing");
+    context.uSamplerId = gl.getUniformLocation(context.shaderProgram, "uSampler");
 }
 
 /**
@@ -62,8 +66,8 @@ function prepareClearColor() {
  */
 function prepareScene() {
     setUpProjectionMat();
-    let filledRect = new Rectangle(gl, [1, 0, 0], [-200, 0], 160, 100);
-    scene.rectangles = [filledRect];
+    scene.rectangleTexture = new Rectangle(gl, [1, 0, 0], [-200, 0], 250, 250);
+    scene.rectangleColor = new Rectangle(gl, [1, 0, 0], [+200, 0], 250, 250)
 }
 
 /**
@@ -81,7 +85,19 @@ function setUpProjectionMat() {
 function draw() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    scene.rectangles.forEach(function (rect) {
-        rect.draw(gl, context.aVertexPositionId, context.aVertexColorId, context.uModelMatId);
-    })
+    enableTexture();
+
+    gl.uniform1i(context.uIsTextureDrawingId, 1);
+    scene.rectangleTexture.draw(gl, context.aVertexPositionId,
+        context.aVertexColorId, context.aVertexTextureCoordId, context.uModelMatId);
+
+    gl.uniform1i(context.uIsTextureDrawingId, 0);
+    scene.rectangleColor.draw(gl, context.aVertexPositionId,
+        context.aVertexColorId, context.aVertexTextureCoordId, context.uModelMatId);
+}
+
+function enableTexture() {
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D , texture.object);
+    gl.uniform1i(context.uSamplerId, 0);
 }
