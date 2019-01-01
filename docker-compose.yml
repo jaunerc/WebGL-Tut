@@ -28,3 +28,10 @@ services:
     ports:
       - "4204:4242"
     hostname: tutorial4
+  
+  tutorial5:
+    build:
+      context: ./tutorial-05
+    ports:
+      - "4205:4242"
+    hostname: tutorial5
