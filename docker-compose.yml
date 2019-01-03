@@ -35,3 +35,12 @@ services:
     ports:
       - "4205:4242"
     hostname: tutorial5
+  
+  tutorial6:
+    build:
+      context: ./tutorial-06
+    ports:
+      - "4206:4242"
+    volumes:
+     - ./tutorial-06:/usr/src/app/
+    hostname: tutorial6
