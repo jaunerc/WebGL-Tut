@@ -39,12 +39,20 @@ function start() {
         })
 }
 
+/**
+ * Invokes the draw method and request this function again.
+ * @param timeStamp The time difference since the last call.
+ */
 function drawAnimated(timeStamp) {
     updateDrawables(timeStamp);
     draw();
     window.requestAnimationFrame(drawAnimated);
 }
 
+/**
+ * Updates the drawable objects.
+ * @param timeStamp The time difference since the last call.
+ */
 function updateDrawables(timeStamp) {
     scene.rectangleColor.updatePosition(timeStamp);
     scene.rectangleTexture.updatePosition(timeStamp);
