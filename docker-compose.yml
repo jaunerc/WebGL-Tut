@@ -6,35 +6,40 @@ services:
       context: ./tutorial-01
     ports:
       - "4201:4242"
-    hostname: tutorial1
+    volumes:
+     - ./tutorial-01:/usr/src/app/
     
   tutorial2:
     build:
       context: ./tutorial-02
     ports:
       - "4202:4242"
-    hostname: tutorial2
+    volumes:
+     - ./tutorial-02:/usr/src/app/
     
   tutorial3:
     build:
       context: ./tutorial-03
     ports:
       - "4203:4242"
-    hostname: tutorial3
+    volumes:
+     - ./tutorial-03:/usr/src/app/
     
   tutorial4:
     build:
       context: ./tutorial-04
     ports:
       - "4204:4242"
-    hostname: tutorial4
+    volumes:
+     - ./tutorial-04:/usr/src/app/
   
   tutorial5:
     build:
       context: ./tutorial-05
     ports:
       - "4205:4242"
-    hostname: tutorial5
+    volumes:
+     - ./tutorial-05:/usr/src/app/
   
   tutorial6:
     build:
@@ -43,7 +48,6 @@ services:
       - "4206:4242"
     volumes:
      - ./tutorial-06:/usr/src/app/
-    hostname: tutorial6
 
   tutorial7:
     build:
@@ -52,4 +56,3 @@ services:
       - "4207:4242"
     volumes:
      - ./tutorial-07:/usr/src/app/
-    hostname: tutorial7
