@@ -56,3 +56,11 @@ services:
       - "4207:4242"
     volumes:
      - ./tutorial-07:/usr/src/app/
+
+  tutorial8:
+    build:
+      context: ./tutorial-08
+    ports:
+      - "4208:4242"
+    volumes:
+     - ./tutorial-08:/usr/src/app/
