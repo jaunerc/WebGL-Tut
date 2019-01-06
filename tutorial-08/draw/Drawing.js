@@ -12,9 +12,12 @@ class Drawable {
 
     /**
      * Updates the position.
-     * @param timeStamp The time difference since the last call.
      */
-    updatePosition(timeStamp) {
+    translate(vTranslation) {
+        throw new Error('You have to implement the method!');
+    }
+
+    rotate(angle, vRotation) {
         throw new Error('You have to implement the method!');
     }
 
@@ -23,8 +26,46 @@ class Drawable {
      * @param gl The WebGL object.
      * @param context The WebGL context.
      */
-    draw(gl, context) {
+    draw(gl, context, viewMatrix) {
         throw new Error('You have to implement the method!');
+    }
+}
+
+class Cube extends Drawable {
+
+    constructor(gl, position, size) {
+        super(position);
+        this.size = size;
+        this.angle = 0;
+        this.vRotation = [0, 0, 0];
+        this.prepareCubeBuffer(gl);
+    }
+
+    prepareCubeBuffer(gl) {
+        this.cubeBuffer = new WireFrameCubeBuffer(gl);
+    }
+
+    rotate(angle, vRotation) {
+        this.angle = angle;
+        this.vRotation = vRotation;
+    }
+
+    /**
+     * Creates the modelview-matrix for this cube.
+     * @returns {mat4} modelview-matrix
+     */
+    createModelViewMat(viewMatrix) {
+        let modelViewMat = viewMatrix;
+        mat4.translate(modelViewMat, modelViewMat, this.position);
+        mat4.rotate(modelViewMat, modelViewMat, glMatrix.toRadian(this.angle), this.vRotation);
+        mat4.scale(modelViewMat, modelViewMat, [this.size, this.size, this.size]);
+        return modelViewMat;
+    }
+
+    draw(gl, context, viewMatrix) {
+        let modelViewMat = this.createModelViewMat(viewMatrix);
+        gl.uniformMatrix4fv(context.uModelMatId, false, modelViewMat);
+        this.cubeBuffer.draw(gl, context.aVertexPositionId, context.aVertexColorId);
     }
 }
 

@@ -11,9 +11,10 @@ let texture = {
 
 let scene = {
     clearColor: {r:0.4, g:0.823, b:1, a:1},
-    eyePosition: [0, 3, -4],
+    eyePosition: [0, 0, 5],
     lookAtCenter: [0, 0, 0],
-    lookAtUp: [0, 1, 0]
+    lookAtUp: [0, 1, 0],
+    cube: null
 };
 
 // Starts the program when the entire page loads
@@ -34,8 +35,19 @@ function start() {
             prepareClearColor();
             texture.object = loadTexture(gl, texture.imgSource, draw);
             prepareScene();
-            draw();
+            enableTexture();
+            window.requestAnimationFrame(drawAnimated);
         })
+}
+
+/**
+ * Invokes the draw method and request this function again.
+ * @param timeStamp The time difference since the last call.
+ */
+function drawAnimated(timeStamp) {
+    updateScene();
+    draw();
+    window.requestAnimationFrame(drawAnimated);
 }
 
 /**
@@ -65,6 +77,23 @@ function prepareClearColor() {
  */
 function prepareScene() {
     setUpProjectionMat();
+    scene.cube = new Cube(gl, [0, 0, -20], 10);
+}
+
+function updateScene() {
+    let rotateYSlider = document.getElementById("rotateAngleSlider");
+    let rotateYInfo = document.getElementById("rotateAngleInfo");
+    let rotateXBox = document.getElementById("rotateXBox");
+    let rotateYBox = document.getElementById("rotateYBox");
+    let rotateZBox = document.getElementById("rotateZBox");
+
+    let xAxis = (rotateXBox.checked) ? 1 : 0;
+    let yAxis = (rotateYBox.checked) ? 1 : 0;
+    let zAxis = (rotateZBox.checked) ? 1 : 0;
+
+    let yAngle = parseInt(rotateYSlider.value);
+    rotateYInfo.value = yAngle;
+    scene.cube.rotate(yAngle, [xAxis, yAxis, zAxis]);
 }
 
 /**
@@ -73,7 +102,7 @@ function prepareScene() {
 function setUpProjectionMat() {
     let projectionMat = mat4.create();
     let screenRatio = gl.drawingBufferWidth / gl.drawingBufferHeight;
-    mat4.perspective(projectionMat, glMatrix.toRadian(45), screenRatio, 1, 100);
+    mat4.perspective(projectionMat, glMatrix.toRadian(45), screenRatio, 1, 300);
     gl.uniformMatrix4fv(context.uProjectionMatId , false , projectionMat);
 }
 
@@ -89,9 +118,8 @@ function setUpViewMat() {
 function draw() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    enableTexture();
-
-    setUpViewMat();
+    let viewMatrix = setUpViewMat();
+    scene.cube.draw(gl, context, viewMatrix);
 }
 
 function enableTexture() {

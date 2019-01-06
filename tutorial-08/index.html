@@ -7,16 +7,29 @@
     <script type="text/javascript" src="util/gl-util.js"></script>
     <script type="text/javascript" src="tutorial-08.js"></script>
     <script type="text/javascript" src="draw/Drawing.js"></script>
-    <script type="text/javascript" src="RectangleBuffer.js"></script>
-    <title>WebGL Tutorial 5</title>
+    <script type="text/javascript" src="draw/WireFrameCubeBuffer.js"></script>
+    <title>WebGL Tutorial 8</title>
 </head>
 <body>
-<h1>Tutorial 5</h1>
+<h1>Tutorial 8</h1>
+<label for="rotateAngleSlider">rotation angle</label>
+<input type="range" min="0" max="360" value="0" id="rotateAngleSlider" >
+<label for="rotateAngleInfo">current value</label>
+<input type="text" value="0" id="rotateAngleInfo" readonly>
+<br><br>
+<label for="rotateXBox">rotate on: X axis</label>
+<input type="checkbox" id="rotateXBox" >
+<label for="rotateYBox">Y axis</label>
+<input type="checkbox" id="rotateYBox" checked>
+<label for="rotateZBox">Z axis</label>
+<input type="checkbox" id="rotateZBox" >
+<br><br>
+
 <canvas id="myCanvas" width="800" height="600" tabindex="1"></canvas>
 <h2>Content</h2>
 <ul>
-	<li>Colors per vertex</li>
-	<li>Texturecoordinates</li>
+	<li>3D scene</li>
+    <li>Wireframe cube</li>
 </ul>
 </body>
 </html>
