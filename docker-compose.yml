@@ -64,3 +64,11 @@ services:
       - "4208:4242"
     volumes:
      - ./tutorial-08:/usr/src/app/
+
+  tutorial9:
+    build:
+      context: ./tutorial-09
+    ports:
+      - "4209:4242"
+    volumes:
+     - ./tutorial-09:/usr/src/app/
