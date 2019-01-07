@@ -47,8 +47,8 @@ function FilledCircleBuffer(gl, numPoints, color) {
 
     return {
         bufferVertices: defineVertices(gl, numPoints),
-        bufferTriangles: defineTriangles(gl, numPoints),
         bufferColors: defineColors(gl, numPoints, color),
+        bufferTriangles: defineTriangles(gl, numPoints),
 
         setPositionBuffer: function(gl, aVertexPositionId) {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferVertices);

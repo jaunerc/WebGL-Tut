@@ -35,7 +35,6 @@ function start() {
             prepareClearColor();
             texture.object = loadTexture(gl, texture.imgSource, draw);
             prepareScene();
-            //enableTexture();
             window.requestAnimationFrame(drawAnimated);
         })
 }

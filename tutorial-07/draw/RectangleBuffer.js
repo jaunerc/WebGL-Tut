@@ -104,6 +104,10 @@ function RectangleBuffer(gl) {
             this.setPositionBuffer(gl, aVertexPositionId);
             this.setTextureBuffer(gl, aVertexTextureCoordId);
             this.drawTriangles(gl);
+
+            // Fix for Google Chrome
+            gl.disableVertexAttribArray(aVertexPositionId);
+            gl.disableVertexAttribArray(aVertexTextureCoordId);
         }
     }
 }

@@ -32,7 +32,7 @@ function start() {
         .finally(() => {
             prepareGlVariables();
             prepareClearColor();
-            texture.object = loadTexture(gl, texture.imgSource, draw);
+            texture.object = loadTexture(gl, texture.imgSource);
             prepareScene();
             window.requestAnimationFrame(drawAnimated);
         })
