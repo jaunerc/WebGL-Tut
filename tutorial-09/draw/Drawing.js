@@ -55,7 +55,8 @@ class Cube extends Drawable {
      * @returns {mat4} modelview-matrix
      */
     createModelViewMat(viewMatrix) {
-        let modelViewMat = viewMatrix;
+        let modelViewMat = mat4.create();
+        mat4.copy(modelViewMat, viewMatrix);
         mat4.translate(modelViewMat, modelViewMat, this.position);
         mat4.rotate(modelViewMat, modelViewMat, glMatrix.toRadian(this.angle), this.vRotation);
         mat4.scale(modelViewMat, modelViewMat, [this.size, this.size, this.size]);
@@ -71,7 +72,6 @@ class WireFrameCube extends Cube {
 
     constructor(gl, position, size) {
         super(gl, position, size);
-        this.prepareCubeBuffer(gl);
     }
 
     prepareCubeBuffer(gl) {
@@ -89,7 +89,6 @@ class SolidCube extends Cube {
 
     constructor(gl, position, size) {
         super(gl, position, size);
-        this.prepareCubeBuffer(gl);
     }
 
     prepareCubeBuffer(gl) {
@@ -100,6 +99,26 @@ class SolidCube extends Cube {
         let modelViewMat = this.createModelViewMat(viewMatrix);
         gl.uniformMatrix4fv(context.uModelMatId, false, modelViewMat);
         this.cubeBuffer.draw(gl, context.aVertexPositionId, context.aVertexColorId);
+    }
+}
+
+class TexturedCube extends Cube {
+
+    constructor(gl, position, size) {
+        super(gl, position, size);
+        this.prepareCubeBuffer(gl);
+    }
+
+    prepareCubeBuffer(gl) {
+        this.cubeBuffer = new CubeBuffer(gl);
+    }
+
+    draw(gl, context, viewMatrix) {
+        gl.uniform1i(context.uIsTextureDrawingId, 1);
+        let modelViewMat = this.createModelViewMat(viewMatrix);
+        gl.uniformMatrix4fv(context.uModelMatId, false, modelViewMat);
+        this.cubeBuffer.drawWithTexture(gl, context.aVertexPositionId, context.aVertexTextureCoordId);
+        gl.uniform1i(context.uIsTextureDrawingId, 0);
     }
 }
 

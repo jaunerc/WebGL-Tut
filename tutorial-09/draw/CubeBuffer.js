@@ -78,10 +78,50 @@ function CubeBuffer(gl) {
             0.8, 1, 1, 1,
             0.8, 1, 1, 1,
         ];
-        console.log(colors);
+
         let buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+        return buffer;
+    }
+
+    function defineTextureCoords(gl) {
+        let texture = [
+            // Front
+            0.0,  1.0,
+            0.0,  0.0,
+            1.0,  0.0,
+            1.0,  1.0,
+            // Back
+            0.0,  1.0,
+            0.0,  0.0,
+            1.0,  0.0,
+            1.0,  1.0,
+            // Top
+            0.0,  1.0,
+            0.0,  0.0,
+            1.0,  0.0,
+            1.0,  1.0,
+            // Bottom
+            0.0,  1.0,
+            0.0,  0.0,
+            1.0,  0.0,
+            1.0,  1.0,
+            // Right
+            0.0,  1.0,
+            0.0,  0.0,
+            1.0,  0.0,
+            1.0,  1.0,
+            // Left
+            0.0,  1.0,
+            0.0,  0.0,
+            1.0,  0.0,
+            1.0,  1.0,
+        ];
+
+        let buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texture), gl.STATIC_DRAW);
         return buffer;
     }
 
@@ -110,6 +150,7 @@ function CubeBuffer(gl) {
     return {
         bufferVertices: defineVertices(gl),
         bufferColors: defineColors(gl),
+        bufferTexture: defineTextureCoords(gl),
         bufferTriangles: defineTriangles(gl),
 
         setPositionBuffer: function(gl, aVertexPositionId) {
@@ -124,6 +165,12 @@ function CubeBuffer(gl) {
             gl.enableVertexAttribArray(aVertexColorId);
         },
 
+        setTextureBuffer: function(gl, aVertexTextureCoordId) {
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferTexture);
+            gl.vertexAttribPointer(aVertexTextureCoordId, 2, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(aVertexTextureCoordId);
+        },
+
         drawTriangles: function(gl) {
             let numTriangles = 36; // 12 triangles * 3 endpoints
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferTriangles);
@@ -134,6 +181,20 @@ function CubeBuffer(gl) {
             this.setPositionBuffer(gl, aVertexPositionId);
             this.setColorBuffer(gl, aVertexColorId);
             this.drawTriangles(gl);
+
+            // Fix for Google Chrome
+            gl.disableVertexAttribArray(aVertexPositionId);
+            gl.disableVertexAttribArray(aVertexColorId);
+        },
+
+        drawWithTexture: function (gl, aVertexPositionId, aVertexTextureCoordId) {
+            this.setPositionBuffer(gl, aVertexPositionId);
+            this.setTextureBuffer(gl, aVertexTextureCoordId);
+            this.drawTriangles(gl);
+
+            // Fix for Google Chrome
+            gl.disableVertexAttribArray(aVertexPositionId);
+            gl.disableVertexAttribArray(aVertexTextureCoordId);
         }
     }
 }

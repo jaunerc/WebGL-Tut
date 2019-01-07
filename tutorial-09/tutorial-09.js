@@ -14,7 +14,7 @@ let scene = {
     eyePosition: [0, 0, 5],
     lookAtCenter: [0, 0, 0],
     lookAtUp: [0, 1, 0],
-    cube: null
+    cubes: []
 };
 
 // Starts the program when the entire page loads
@@ -33,7 +33,7 @@ function start() {
         .finally(() => {
             prepareGlVariables();
             prepareClearColor();
-            texture.object = loadTexture(gl, texture.imgSource, draw);
+            texture.object = loadTexture(gl, texture.imgSource);
             prepareScene();
             window.requestAnimationFrame(drawAnimated);
         })
@@ -76,8 +76,12 @@ function prepareClearColor() {
  */
 function prepareScene() {
     setUpProjectionMat();
-    //scene.cube = new WireFrameCube(gl, [0, 0, -20], 10);
-    scene.cube = new SolidCube(gl, [0, 0, -20], 10);
+    let cube1 = new TexturedCube(gl, [-10, 0, -30], 10);
+    let cube2 = new SolidCube(gl, [10, 0, -30], 10);
+    let cube3 = new WireFrameCube(gl, [0, 10, -40], 5);
+    scene.cubes.push(cube1);
+    scene.cubes.push(cube2);
+    scene.cubes.push(cube3);
 }
 
 function updateScene() {
@@ -93,7 +97,8 @@ function updateScene() {
 
     let yAngle = parseInt(rotateYSlider.value);
     rotateYInfo.value = yAngle;
-    scene.cube.rotate(yAngle, [xAxis, yAxis, zAxis]);
+
+    scene.cubes.forEach((cube) => cube.rotate(yAngle, [xAxis, yAxis, zAxis]));
 }
 
 /**
@@ -120,8 +125,10 @@ function draw() {
 
     gl.enable(gl.DEPTH_TEST); // z-buffer
 
+    enableTexture();
+
     let viewMatrix = setUpViewMat();
-    scene.cube.draw(gl, context, viewMatrix);
+    scene.cubes.forEach((cube) => cube.draw(gl, context, viewMatrix));
 }
 
 function enableTexture() {

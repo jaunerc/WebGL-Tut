@@ -97,6 +97,9 @@ function WireFrameCubeBuffer(gl) {
             this.setPositionBuffer(gl, aVertexPositionId);
             this.setColorBuffer(gl, aVertexColorId);
             this.drawTriangles(gl);
+            // Fix for Google Chrome
+            gl.disableVertexAttribArray(aVertexPositionId);
+            gl.disableVertexAttribArray(aVertexColorId);
         }
     }
 }

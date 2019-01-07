@@ -68,7 +68,7 @@ function createAndCompileShader(gl, shaderType, shaderSource) {
 }
 
 
-function loadTexture(gl, imgSource, drawCallback) {
+function loadTexture(gl, imgSource) {
     let image = new Image();
     let textureObj = gl.createTexture();
     image.onload = function () {
@@ -84,8 +84,6 @@ function loadTexture(gl, imgSource, drawCallback) {
 
         // turn  texture  off  again
         gl.bindTexture(gl.TEXTURE_2D, null);
-
-        drawCallback();
     };
     image.src = imgSource;
     return textureObj;
