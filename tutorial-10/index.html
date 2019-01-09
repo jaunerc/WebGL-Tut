@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="util/webgl-debug.js"></script>
+    <script type="text/javascript" src="util/gl-matrix.js"></script>
+    <script type="text/javascript" src="util/gl-util.js"></script>
+    <script type="text/javascript" src="tutorial-10.js"></script>
+    <script type="text/javascript" src="draw/Drawing.js"></script>
+    <script type="text/javascript" src="draw/WireFrameCubeBuffer.js"></script>
+    <script type="text/javascript" src="draw/CubeBuffer.js"></script>
+    <title>WebGL Tutorial 10</title>
+</head>
+<body>
+<h1>Tutorial 10</h1>
+<label for="rotateAngleSlider">rotation angle</label>
+<input type="range" min="0" max="360" value="0" id="rotateAngleSlider" >
+<label for="rotateAngleInfo">current value</label>
+<input type="text" value="0" id="rotateAngleInfo" readonly>
+<br><br>
+<label for="rotateXBox">rotate on: X axis</label>
+<input type="checkbox" id="rotateXBox" >
+<label for="rotateYBox">Y axis</label>
+<input type="checkbox" id="rotateYBox" checked>
+<label for="rotateZBox">Z axis</label>
+<input type="checkbox" id="rotateZBox" >
+<br><br>
+
+<canvas id="myCanvas" width="800" height="600" tabindex="1"></canvas>
+</body>
+</html>
