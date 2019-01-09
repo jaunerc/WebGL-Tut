@@ -14,6 +14,8 @@ let scene = {
     eyePosition: [0, 0, 5],
     lookAtCenter: [0, 0, 0],
     lookAtUp: [0, 1, 0],
+    lightPosition: [0, 0, 0], // Position of the light source
+    lightColor: [1, 1, 1], // light color
     cubes: []
 };
 
@@ -62,6 +64,12 @@ function prepareGlVariables() {
     context.uModelMatId = gl.getUniformLocation(context.shaderProgram, "uModelMat");
     context.uNormalMatId = gl.getUniformLocation(context.shaderProgram, "uNormalMat");
 
+    // Lighting
+    context.uEnableLightingId = gl.getUniformLocation(context.shaderProgram, "uEnableLighting");
+    context.uLightPositionId = gl.getUniformLocation(context.shaderProgram, "uLightPosition");
+    context.uLightColorId = gl.getUniformLocation(context.shaderProgram, "uLightColor");
+
+
     context.uIsTextureDrawingId = gl.getUniformLocation(context.shaderProgram, "uIsTextureDrawing");
     context.uSamplerId = gl.getUniformLocation(context.shaderProgram, "uSampler");
 }
@@ -78,13 +86,12 @@ function prepareClearColor() {
  * Prepares the scene before drawing.
  */
 function prepareScene() {
+    setUpLight();
     setUpProjectionMat();
     let cube1 = new TexturedCube(gl, [-10, 0, -30], 10);
     let cube2 = new SolidCube(gl, [10, 0, -30], 10);
-    //let cube3 = new WireFrameCube(gl, [0, 10, -40], 5);
     scene.cubes.push(cube1);
     scene.cubes.push(cube2);
-    //scene.cubes.push(cube3);
 }
 
 function updateScene() {
@@ -118,6 +125,12 @@ function setUpViewMat() {
     let viewMatrix = mat4.create();
     mat4.lookAt(viewMatrix, scene.eyePosition, scene.lookAtCenter, scene.lookAtUp);
     return viewMatrix;
+}
+
+function setUpLight() {
+    gl.uniform1i(context.uEnableLightingId, 1);
+    gl.uniform3fv(context.uLightPositionId, scene.lightPosition);
+    gl.uniform3fv(context.uLightColorId, scene.lightColor);
 }
 
 /**
