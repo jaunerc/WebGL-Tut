@@ -1,4 +1,4 @@
-# Tutorial 10
+# Lighting
 
 Link to the view
-[Click](https://jaunerc.github.io/WebGL-Tut/tutorial-10/ "Tutorial 10")
+[Click](https://jaunerc.github.io/WebGL-Tut/examples/lighting-lab/ "Lighting")
