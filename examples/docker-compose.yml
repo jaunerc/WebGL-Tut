@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  lighting
+    build:
+      context: ./lighting-lab
+    ports:
+      - "4401:4242"
+    volumes:
+     - ./lighting-lab:/usr/src/app/
