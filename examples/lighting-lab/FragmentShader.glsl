@@ -15,7 +15,9 @@ varying vec3 vLightPositionEye3;
 
 const float ambientFactor = 0.1;
 const float diffuseFactor = 1.0;
-const float shininess = 64.0;
+const float shininess = 128.0;
+
+const vec3 specularMaterialColor = vec3(0.3, 0.3, 0.3);
 
 void main() {
     vec3 baseColor = vColor;
@@ -24,51 +26,38 @@ void main() {
     }
 
     if (uEnableLighting) {
-        vec3 color;
-        vec3 directionToLight;
-        vec3 vertexNormal;
-        vec3 reflection;
-        vec3 eyeDirection;
-        vec3 ambientColor;
-        vec3 diffuseColor;
-        vec3 specularColor;
-        float cosPhi;
-
-        color = baseColor;
+        vec3 color = baseColor;
 
         // calculates the vector from the current vertex to the light source
-        directionToLight = normalize(uLightPosition - vVertexPositionEye3);
+        vec3 directionToLight = normalize(uLightPosition - vVertexPositionEye3);
 
         // normalizes the vertex normal vector
-        vertexNormal = normalize(vNormalEye);
+        vec3 vertexNormal = normalize(vNormalEye);
 
         // ambient lighting
-        ambientColor = ambientFactor * color;
+        vec3 ambientColor = ambientFactor * uLightColor * color;
 
         // diffuse lighting
-        cosPhi = dot(vNormalEye, directionToLight);
-        cosPhi = clamp(cosPhi, 0.0, 1.0);
-        diffuseColor = diffuseFactor * cosPhi * color;
+        float cosAngle = dot(vNormalEye, directionToLight);
+        cosAngle = clamp(cosAngle, 0.0, 1.0);
+        vec3 diffuseColor = diffuseFactor * cosAngle * color * uLightColor;
 
-        // specular lighting
-        // calculate reflection
-        reflection = 2.0 * (dot(vertexNormal, directionToLight)) * vertexNormal - directionToLight;
-        reflection = normalize(reflection);
+        vec3 specularColor = vec3(0.0, 0.0, 0.0);
+        if (cosAngle > 0.0) {
+            // specular lighting
+            vec3 reflection = 2.0 * (dot(vertexNormal, directionToLight)) * vertexNormal - directionToLight;
+            reflection = normalize(reflection);
 
-        // calculate the direction to the camera position
-        eyeDirection = -normalize(vVertexPositionEye3);
-        cosPhi = dot(reflection, eyeDirection);
-        cosPhi = clamp(cosPhi, 0.0, 1.0);
-        cosPhi = pow(cosPhi, shininess);
+            // calculate the direction to the camera position
+            vec3 eyeDirection = -normalize(vVertexPositionEye3);
+            float cosPhi = dot(reflection, eyeDirection);
+            cosPhi = clamp(cosPhi, 0.0, 1.0);
+            cosPhi = pow(cosPhi, shininess);
 
-        if (cosPhi > 0.0) {
-            specularColor = uLightColor * cosPhi;
-            //diffuseColor = diffuseColor * (1.0 - cosPhi);
-        } else {
-            specularColor = vec3(0.0, 0.0, 0.0);
+            specularColor = specularMaterialColor*cosPhi + uLightColor * cosPhi;
         }
 
-        gl_FragColor = vec4(ambientColor + diffuseColor, 1);
+        gl_FragColor = vec4(ambientColor + diffuseColor + specularColor, 1);
     } else {
         gl_FragColor = vec4(baseColor, 1.0);
     }
